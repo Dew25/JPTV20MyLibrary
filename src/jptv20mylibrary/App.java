@@ -8,6 +8,7 @@ package jptv20mylibrary;
 import java.util.Scanner;
 import myclasses.Author;
 import myclasses.Book;
+import myclasses.Reader;
 
 
 
@@ -18,6 +19,7 @@ import myclasses.Book;
 public class App {
     private Scanner scanner = new Scanner(System.in);
     private Book[] books = new Book[10];
+    private Reader[] readers = new Reader[10];
     public void run(){
         String repeat = "r";
         do{
@@ -25,6 +27,8 @@ public class App {
             System.out.println("0: Выход из программы");
             System.out.println("1: Добавить книгу");
             System.out.println("2: Список книг");
+            System.out.println("3: Добавить читателя");
+            System.out.println("4: Список читателей");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -39,6 +43,7 @@ public class App {
                             break;
                         }
                     }
+                    System.out.println("-----------------------");
                     break;
                 case 2:
                     System.out.println("---- Список книг -----");
@@ -47,6 +52,26 @@ public class App {
                             System.out.println(books[i].toString());
                         }
                     }
+                    System.out.println("-----------------------");
+                    break;
+                case 3:
+                    System.out.println("---- Добавление читателя ----");
+                    for (int i = 0; i < readers.length; i++) {
+                        if(readers[i] == null){
+                            readers[i] = addReader();
+                            break;
+                        }
+                    }
+                    System.out.println("-----------------------");
+                    break;
+                case 4:
+                    System.out.println("---- Список читателей -----");
+                    for (int i = 0; i < readers.length; i++) {
+                        if(readers[i] != null){
+                            System.out.println(readers[i].toString());
+                        }
+                    }
+                    System.out.println("-----------------------");
                     break;
                 default:
                     System.out.println("Введите номер из списка!");;
@@ -77,6 +102,16 @@ public class App {
         book.setAuthor(authors);
         
         return book;
+    }
+    private Reader addReader(){
+        Reader reader = new Reader();
+        System.out.print("Введите имя читателя: ");
+        reader.setFirstname(scanner.nextLine());
+        System.out.print("Введите фамилию читателя: ");
+        reader.setLastname(scanner.nextLine());
+        System.out.print("Введите телефон читателя: ");
+        reader.setPhone(scanner.nextLine());
+        return reader;
     }
         
 }
