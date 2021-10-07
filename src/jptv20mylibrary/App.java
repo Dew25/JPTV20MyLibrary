@@ -6,6 +6,8 @@
 package jptv20mylibrary;
 
 import java.util.Scanner;
+import myclasses.Author;
+import myclasses.Book;
 
 
 
@@ -14,18 +16,23 @@ import java.util.Scanner;
  * @author Melnikov
  */
 public class App {
+    private Scanner scanner = new Scanner(System.in);
     
     public void run(){
         String repeat = "r";
         do{
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Выберите номер задачи: ");
             System.out.println("0: Выход из программы");
-            int task = scanner.nextInt();
+            System.out.println("1: Добавить книгу");
+            int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
                     repeat="q";
                     System.out.println("Пока! :)");
+                    break;
+                case 1:
+                    System.out.println("---- Добавление книги ----");
+                    addBook().toString();
                     break;
                 default:
                     System.out.println("Введите номер из списка!");;
@@ -33,6 +40,29 @@ public class App {
             
         }while("r".equals(repeat));
     }
-
+    private Book addBook(){
+        Book book = new Book();
+        System.out.print("Введите название книги: ");
+        book.setBookName(scanner.nextLine());
+        System.out.print("Введите год публикации книги: ");
+        book.setPublishedYear(scanner.nextInt()); scanner.nextLine();
+        System.out.println("Автор книги: ");
+        System.out.print("Введите количество авторов: ");
+        int countAutors = scanner.nextInt(); scanner.nextLine();
+        Author[] authors = new Author[countAutors];
+        for (int i = 0; i < authors.length; i++) {
+            Author author = new Author();
+            System.out.print("Введите имя автора "+(i+1)+": ");
+            author.setFirstname(scanner.nextLine());
+            System.out.print("Введите фамилию автора: ");
+            author.setLastname(scanner.nextLine());
+            System.out.print("Введите год рождения автора: ");
+            author.setBirthYear(scanner.nextInt());scanner.nextLine();
+            authors[i] = author;
+        }
+        book.setAuthor(authors);
+        
+        return book;
+    }
         
 }
