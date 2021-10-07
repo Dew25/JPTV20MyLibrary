@@ -17,13 +17,14 @@ import myclasses.Book;
  */
 public class App {
     private Scanner scanner = new Scanner(System.in);
-    
+    private Book[] books = new Book[10];
     public void run(){
         String repeat = "r";
         do{
             System.out.println("Выберите номер задачи: ");
             System.out.println("0: Выход из программы");
             System.out.println("1: Добавить книгу");
+            System.out.println("2: Список книг");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -32,7 +33,20 @@ public class App {
                     break;
                 case 1:
                     System.out.println("---- Добавление книги ----");
-                    addBook().toString();
+                    for (int i = 0; i < books.length; i++) {
+                        if(books[i] == null){
+                            books[i] = addBook();
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    System.out.println("---- Список книг -----");
+                    for (int i = 0; i < books.length; i++) {
+                        if(books[i] != null){
+                            System.out.println(books[i].toString());
+                        }
+                    }
                     break;
                 default:
                     System.out.println("Введите номер из списка!");;
