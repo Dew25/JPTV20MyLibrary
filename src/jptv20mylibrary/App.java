@@ -8,10 +8,12 @@ package jptv20mylibrary;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
-import myclasses.Author;
-import myclasses.Book;
-import myclasses.History;
-import myclasses.Reader;
+import entity.Author;
+import entity.Book;
+import entity.History;
+import entity.Reader;
+import interfaces.Keeping;
+import tools.SaverToFile;
 
 
 
@@ -24,6 +26,12 @@ public class App {
     private Book[] books = new Book[10];
     private Reader[] readers = new Reader[10];
     private History[] histories = new History[10];
+    private Keeping keeper = new SaverToFile();
+
+    public App() {
+        books = keeper.loadBooks();
+    }
+    
     public void run(){
         String repeat = "r";
         do{
@@ -35,6 +43,7 @@ public class App {
             System.out.println("4: Список читателей");
             System.out.println("5: Выдать книгу");
             System.out.println("6: Список выданных книг");
+            System.out.println("7: Возврат книги");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -46,6 +55,7 @@ public class App {
                     for (int i = 0; i < books.length; i++) {
                         if(books[i] == null){
                             books[i] = addBook();
+                            keeper.saveBooks(books);
                             break;
                         }
                     }
@@ -91,23 +101,42 @@ public class App {
                     break;
                 case 6:
                     System.out.println("---- Список выданных книг -----");
-                    int n = 0;
-                    for (int i = 0; i < histories.length; i++) {
-                        if(histories[i] != null && histories[i].getReturnedDate() == null){
-                            System.out.println(histories[i].toString());
-                            n++;
-                        }
-                    }
-                    if(n < 1){
-                        System.out.println("Нет выданных книг");
-                    }
+                    printGivenBooks();
                     System.out.println("-----------------------");
+                    break;
+                case 7:
+                    System.out.println("---- Возврат книги -----");
+                    System.out.println("Список выданных книг:");
+                    printGivenBooks();
+                    System.out.print("Выберите номер возвращаемой книги: ");
+                    int numberHistory = scanner.nextInt(); scanner.nextLine();
+                    Calendar c = new GregorianCalendar();
+                    histories[numberHistory - 1].setReturnedDate(c.getTime());
+                    System.out.printf("Книга \"%s\" возвращена%n", histories[numberHistory-1].getBook().getBookName());
                     break;
                 default:
                     System.out.println("Введите номер из списка!");;
             }
             
         }while("r".equals(repeat));
+    }
+    private void printGivenBooks(){
+        int n = 0;
+        for (int i = 0; i < histories.length; i++) {
+            if(histories[i] != null && histories[i].getReturnedDate() == null){
+                System.out.printf("%d. Книгу %s читает %s %s. Выдана книга: %s%n",
+                        i+1,
+                        histories[i].getBook().getBookName(),
+                        histories[i].getReader().getFirstname(),
+                        histories[i].getReader().getLastname(),
+                        histories[i].getGivenDate().toString()
+                );
+                n++;
+            }
+        }
+        if(n < 1){
+            System.out.println("Нет выданных книг");
+        }
     }
     private Book addBook(){
         Book book = new Book();
