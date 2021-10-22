@@ -30,6 +30,8 @@ public class App {
 
     public App() {
         books = keeper.loadBooks();
+        readers = keeper.loadReaders();
+        histories = keeper.loadHistories();
     }
     
     public void run(){
@@ -75,6 +77,7 @@ public class App {
                     for (int i = 0; i < readers.length; i++) {
                         if(readers[i] == null){
                             readers[i] = addReader();
+                            keeper.saveReaders(readers);
                             break;
                         }
                     }
@@ -94,6 +97,7 @@ public class App {
                     for (int i = 0; i < histories.length; i++) {
                         if(histories[i] == null){
                             histories[i] = addHistory();
+                            keeper.saveHistories(histories);
                             break;
                         }
                     }
@@ -112,6 +116,7 @@ public class App {
                     int numberHistory = scanner.nextInt(); scanner.nextLine();
                     Calendar c = new GregorianCalendar();
                     histories[numberHistory - 1].setReturnedDate(c.getTime());
+                    keeper.saveHistories(histories);
                     System.out.printf("Книга \"%s\" возвращена%n", histories[numberHistory-1].getBook().getBookName());
                     break;
                 default:
