@@ -13,7 +13,10 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import interfaces.Keeping;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import tools.SaverToFile;
 
@@ -226,7 +229,19 @@ public class App {
                 System.out.println(i+1+". "+books.get(i).toString());
                 booksForReaders++;
             }else{
-                System.out.println(i+1+". "+"Книги: \""+books.get(i).getBookName()+ "\" нет в наличии");
+                StringBuilder sbDateReturn = new StringBuilder();
+                List<Long> listGivenBookDateInMilliseconds = new ArrayList<>();
+                for (int j = 0; j < histories.size(); j++) {
+                    if(histories.get(j).getBook().equals(books.get(i))){
+                        listGivenBookDateInMilliseconds.add(histories.get(j).getGivenDate().getTime());
+                    } 
+                }
+                LocalDate dateGiven = convertToLocalDateViaInstant(histories.get(i).)
+                System.out.printf("%d. Книги: \"%s\" нет в наличии. Ожидается: %s"
+                        ,i+1
+                        ,books.get(i).getBookName()
+                        ,dateReturn
+                );
             }
         }
         if(booksForReaders < 1){
@@ -235,5 +250,9 @@ public class App {
         }
         return true;
     }
-        
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
+} 
 }
