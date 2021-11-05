@@ -7,17 +7,31 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author Melnikov
  */
+@Entity
 public class Book implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String bookName;
     private int publishedYear;
+    @ElementCollection(fetch = FetchType.LAZY)
     private Author[] author;
     private int quantity;
     private int count;
+
+    public Book() {
+    }
 
     public String getBookName() {
         return bookName;
@@ -70,6 +84,14 @@ public class Book implements Serializable{
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
     
