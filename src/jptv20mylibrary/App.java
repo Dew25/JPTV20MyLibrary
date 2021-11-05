@@ -105,7 +105,7 @@ public class App {
         if("q".equals(quit)) return true;
       return false;
     }
-    private void returnBook() {
+    private void returnBook(){
         System.out.println("Вернуть книгу: ");
         if(quit()) return;
         Set<Integer> numbersGivenBooks = printGivenBooks();
@@ -115,9 +115,14 @@ public class App {
         int historyNumber = insertNumber(numbersGivenBooks);
         Calendar c = new GregorianCalendar();
         histories.get(historyNumber - 1).setReturnedDate(c.getTime());
-        // Здесь объясняется что значит передача по ссылке в Java
-        // https://coderoad.ru/40480/%D0%AD%D1%82%D0%BE-Java-pass-by-reference-%D0%B8%D0%BB%D0%B8-pass-by-value
-        // Постарайтесь понять
+//      Здесь объясняется что значит передача по ссылке в Java
+//      https://coderoad.ru/40480/%D0%AD%D1%82%D0%BE-Java-pass-by-reference-%D0%B8%D0%BB%D0%B8-pass-by-value
+//      Постарайтесь понять почему работает неправильно следующий код.
+//         histories.get(historyNumber - 1).getBook().setCount(
+//                histories.get(historyNumber-1).getBook().getCount() + 1
+//         );
+        
+//      а следующий работает правильно.
         for (int i = 0; i < books.size(); i++) {
           if(books.get(i).getBookName().equals(histories.get(historyNumber-1).getBook().getBookName())){
             books.get(i).setCount(books.get(i).getCount()+1);
@@ -219,12 +224,15 @@ public class App {
         System.out.print("Введите номер читателя: ");
         int numberReader = insertNumber(setNumbersReaders);
         history.setBook(books.get(numberBook-1));
-        if(history.getBook().getCount() > 0){
-            history.getBook().setCount(history.getBook().getCount()-1);
+        if(books.get(numberBook - 1).getCount() > 0){
+            books.get(numberBook - 1).setCount(books.get(numberBook - 1).getCount()-1);
         }
         history.setReader(readers.get(numberReader-1));
         Calendar c = new GregorianCalendar();
         history.setGivenDate(c.getTime());
+        keeper.saveBooks(books);
+        histories.add(history);
+        keeper.saveHistories(histories);
         System.out.println("========================");
     }
 
@@ -249,7 +257,7 @@ public class App {
                 );
                 setNumbersBooks.add(i+1);
             }else if(books.get(i) != null){
-                System.out.printf("%d. %s. %s Нет наличии. Будет возварщена: %s%n"
+                System.out.printf("%d. %s. %s Нет в наличии. Будет возвращена: %s%n"
                         ,i+1
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
