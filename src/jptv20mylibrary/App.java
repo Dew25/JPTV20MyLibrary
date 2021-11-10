@@ -17,12 +17,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import tools.SaverToBase;
 import tools.SaverToFile;
 
 
@@ -36,14 +36,14 @@ public class App {
     private List<Book> books = new ArrayList<>();
     private List<Reader> readers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
-    private Keeping keeper = new SaverToFile();
-   // private Keeping keeper = new SaverToBase();
+//    private Keeping keeper = new SaverToFile();
+    private Keeping keeper = new SaverToBase();
    // private SaverToBase saverToBase = new SaverToBase();
 
     public App() {
         books = keeper.loadBooks();
-        readers = keeper.loadReaders();
-        histories = keeper.loadHistories();
+//        readers = keeper.loadReaders();
+//        histories = keeper.loadHistories();
     }
     
     public void run(){
@@ -170,8 +170,8 @@ public class App {
         System.out.println("Автор книги: ");
         System.out.print("Введите количество авторов: ");
         int countAutors = getNumber();
-        Author[] authors = new Author[countAutors];
-        for (int i = 0; i < authors.length; i++) {
+        List<Author> authorsBook = new ArrayList<>();
+        for (int i = 0; i < countAutors; i++) {
             Author author = new Author();
             System.out.print("Введите имя автора "+(i+1)+": ");
             author.setFirstname(scanner.nextLine());
@@ -179,10 +179,10 @@ public class App {
             author.setLastname(scanner.nextLine());
             System.out.print("Введите год рождения автора: ");
             author.setBirthYear(getNumber());
-            authors[i] = author;
+            authorsBook.add(author);
         }
         
-        book.setAuthor(authors);
+        book.setAuthor(authorsBook);
         books.add(book);
         keeper.saveBooks(books);
        
@@ -242,10 +242,10 @@ public class App {
         Set<Integer> setNumbersBooks = new HashSet<>();
         for (int i = 0; i < books.size(); i++) {
             StringBuilder cbAutors = new StringBuilder();
-            for (int j = 0; j < books.get(i).getAuthor().length; j++) {
-                cbAutors.append(books.get(i).getAuthor()[j].getFirstname())
+            for (int j = 0; j < books.get(i).getAuthor().size(); j++) {
+                cbAutors.append(books.get(i).getAuthor().get(j).getFirstname())
                         .append(" ")
-                        .append(books.get(i).getAuthor()[j].getLastname())
+                        .append(books.get(i).getAuthor().get(j).getLastname())
                         .append(". ");
             }
             if(books.get(i) != null && books.get(i).getCount() > 0){
