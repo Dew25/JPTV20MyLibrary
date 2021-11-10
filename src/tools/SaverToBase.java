@@ -5,6 +5,7 @@
  */
 package tools;
 
+import entity.Author;
 import entity.Book;
 import entity.History;
 import entity.Reader;
@@ -50,6 +51,29 @@ public class SaverToBase implements Keeping{
         }
         return books;
     }
+    
+    @Override
+    public void saveAuthors(List<Author> authors) {
+        tx.begin();
+            for (int i = 0; i < authors.size(); i++) {
+                if(authors.get(i).getId() == null){
+                    em.persist(authors.get(i));
+                }
+            }
+        tx.commit();
+    }
+
+    @Override
+    public List<Author> loadAuthors() {
+        List<Author> author=null;
+        try {
+            author = em.createQuery("SELECT author FROM Author author")
+                .getResultList();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+        return author;
+    }
 
     @Override
     public void saveReaders(List<Reader> readers) {
@@ -70,5 +94,6 @@ public class SaverToBase implements Keeping{
     public List<History> loadHistories() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
     
 }
