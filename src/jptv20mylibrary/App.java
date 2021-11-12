@@ -44,8 +44,8 @@ public class App {
     public App() {
         books = keeper.loadBooks();
         authors = keeper.loadAuthors();
-//        readers = keeper.loadReaders();
-//        histories = keeper.loadHistories();
+        readers = keeper.loadReaders();
+        histories = keeper.loadHistories();
     }
     
     public void run(){
@@ -62,6 +62,8 @@ public class App {
             System.out.println("7: Возврат книги");
             System.out.println("8: Добавить автора");
             System.out.println("9: Список авторов");
+            System.out.println("10: Выборка книг по автору");
+            
             int task = getNumber();
             switch (task) {
                 case 0:
@@ -69,14 +71,10 @@ public class App {
                     System.out.println("Пока! :)");
                     break;
                 case 1:
-                    System.out.println("---- Добавление книги ----");
                     addBook();
-                    System.out.println("-----------------------");
                     break;
                 case 2:
-                    System.out.println("---- Список книг -----");
                     printListBooks();
-                    System.out.println("-----------------------");
                     break;
                 case 3:
                     addReader();
@@ -86,24 +84,21 @@ public class App {
                     break;
                 case 5:
                     addHistory();
-                    System.out.println("-----------------------");
                     break;
                 case 6:
-                    System.out.println("---- Список выданных книг -----");
                     printGivenBooks();
-                    System.out.println("-----------------------");
                     break;
                 case 7:
-                    System.out.println("---- Возврат книги -----");
                     returnBook();
                     break;
                 case 8:
-                    System.out.println("---- Добавть автора -----");
                     addAuthor();
                     break;
                 case 9:
-                    System.out.println("---- Список авторов -----");
                     printListAuthors();
+                    break;
+                case 10:
+                    selectionOfBooksByAuthor();
                     break;
                 default:
                     System.out.println("Введите номер из списка!");;
@@ -171,6 +166,7 @@ public class App {
         return setNumberGivenBooks;
     }
     private void addBook(){
+        System.out.println("---- Добавление книги ----");
         Book book = new Book();
         Set<Integer> setNumbersAuthors = printListAuthors();
         if(setNumbersAuthors.isEmpty()){
@@ -201,7 +197,7 @@ public class App {
         book.setCount(book.getQuantity());
         books.add(book);
         keeper.saveBooks(books);
-       
+        System.out.println("-----------------------------");
     }
     private void addReader(){
         System.out.println("---- Добавление читателя ----");
@@ -228,15 +224,16 @@ public class App {
          * 6. инициировать (задать состояние) объект history
          */
         System.out.println("------------ Выдать книгу читателю ----------");
-        System.out.println("Список книг: ");
         Set<Integer> setNumbersBooks = printListBooks();
         if(setNumbersBooks.isEmpty()){
             return;
         }
         System.out.print("Введите номер книги: ");
         int numberBook = insertNumber(setNumbersBooks);
-        System.out.println("Список читателей: ");
         Set<Integer> setNumbersReaders = printListReaders();
+        if(setNumbersReaders.isEmpty()){
+            return;
+        }
         System.out.print("Введите номер читателя: ");
         int numberReader = insertNumber(setNumbersReaders);
         history.setBook(books.get(numberBook-1));
@@ -310,7 +307,7 @@ public class App {
         }while(true);
     }
     private String getReturnDate(Book book){
-        
+        System.out.println("------- Возврат книги -----------");
         for (int i = 0; i < histories.size(); i++) {
             if(book.getBookName().equals(histories.get(i).getBook().getBookName())){
                 LocalDate localGivenDate = histories.get(i).getGivenDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -318,6 +315,7 @@ public class App {
                 return localGivenDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             }
         }
+        System.out.println("=======================");
         return "";
     }
     private Set<Integer> printListReaders() {
@@ -331,6 +329,9 @@ public class App {
                 );
                 setNumbersReaders.add(i+1);
             }
+        }
+        if(setNumbersReaders.isEmpty()){
+            System.out.println("Добавьте читателя!");
         }
         return setNumbersReaders;
     }
@@ -362,6 +363,33 @@ public class App {
         authors.add(author);
         keeper.saveAuthors(authors);
         System.out.println("-----------------------");
+    }
+
+    private void selectionOfBooksByAuthor() {
+        System.out.println("----- Выборка книг по автору -----");
+        Set<Integer> setNumbersAuthors = printListAuthors();
+        if(setNumbersAuthors.isEmpty()){
+            System.out.println("Список авторов пуст. Добавьте автора!");
+            return;
+        }
+        System.out.println("Выберите номер автора: ");
+        Author author = authors.get(insertNumber(setNumbersAuthors)-1);
+        for (int i = 0; i < books.size(); i++) {
+            List<Author>authorsBook = books.get(i).getAuthor();
+            for (int j = 0; j < authorsBook.size(); j++) {
+                Author authorBook = authorsBook.get(j);
+                if(author.equals(authorBook)){
+                    System.out.printf("%d. %s %d%n"
+                            ,i+1
+                            ,books.get(i).getBookName()
+                            ,books.get(i).getPublishedYear()
+                    );
+                }
+                
+            }
+            
+        }
+        System.out.println("----------------------------");
     }
         
 }
