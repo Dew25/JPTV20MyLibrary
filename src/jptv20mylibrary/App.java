@@ -264,18 +264,20 @@ public class App {
                         .append(". ");
             }
             if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s. %s В наличии экземпряров: %d%n"
+                System.out.printf("%d. %s %s %d. В наличии экземпряров: %d%n"
                         ,i+1
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
+                        ,books.get(i).getPublishedYear()
                         ,books.get(i).getCount()
                 );
                 setNumbersBooks.add(i+1);
             }else if(books.get(i) != null){
-                System.out.printf("%d. %s. %s Нет в наличии. Будет возвращена: %s%n"
+                System.out.printf("%d. %s %s %d. Нет в наличии. Будет возвращена: %s%n"
                         ,i+1
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
+                        ,books.get(i).getPublishedYear()
                         ,getReturnDate(books.get(i))
                 );
             }
@@ -420,19 +422,15 @@ public class App {
             System.out.println("Введите новый год издания: ");
             books.get(numBook - 1).setPublishedYear(getNumber());
         }
-        System.out.println("Год издания книги: "+books.get(numBook - 1).getPublishedYear());
-        System.out.println("Хотите изменить нажмите 1, оставить без изменения 2");
-        change = insertNumber(setNum);
-        if(1 == change){
-            System.out.println("Введите новый год издания: ");
-            books.get(numBook - 1).setPublishedYear(getNumber());
-        }
         System.out.println("Количество экземпляров книги: "+books.get(numBook - 1).getQuantity());
         System.out.println("Хотите изменить нажмите 1, оставить без изменения 2");
         change = insertNumber(setNum);
         if(1 == change){
             System.out.println("Введите новое количество книг: ");
-            books.get(numBook - 1).setQuantity(getNumber());
+            int quantity = getNumber();
+            int addCountBooks = quantity - books.get(numBook - 1).getQuantity();
+            books.get(numBook - 1).setQuantity(quantity);
+            books.get(numBook - 1).setCount(books.get(numBook - 1).getCount() + addCountBooks);
         }
         System.out.println("Авторы книги: ");
         for (int i = 0; i < books.get(numBook - 1).getAuthor().size(); i++) {
