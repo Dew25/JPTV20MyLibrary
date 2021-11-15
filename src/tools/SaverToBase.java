@@ -30,8 +30,11 @@ public class SaverToBase implements Keeping{
     public void saveBooks(List<Book> books) {
         tx.begin();
             for (int i = 0; i < books.size(); i++) {
-                if(books.get(i).getId() == null)
+                if(books.get(i).getId() == null){
                     em.persist(books.get(i));
+                }else{
+                    em.merge(books.get(i));
+                }
             }
         tx.commit();
     }
