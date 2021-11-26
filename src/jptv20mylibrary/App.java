@@ -35,14 +35,20 @@ import tools.SaverToBase;
  */
 public class App {
     private Scanner scanner = new Scanner(System.in);
-    private AuthorFacade authorFacade = new AuthorFacade(Author.class);
-    private BookFacade bookFacade = new BookFacade(Book.class);
-    private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
-    private HistoryFacade historyFacade = new HistoryFacade(History.class);
+    private AuthorFacade authorFacade;
+    private BookFacade bookFacade;
+    private ReaderFacade readerFacade;
+    private HistoryFacade historyFacade;
 
     public App() {
+        init();
     }
-    
+    private void init(){
+        authorFacade = new AuthorFacade(Author.class);
+        bookFacade = new BookFacade(Book.class);
+        readerFacade = new ReaderFacade(Reader.class);
+        historyFacade = new HistoryFacade(History.class);
+    }
     public void run(){
         String repeat = "r";
         do{
@@ -225,7 +231,7 @@ public class App {
         Calendar c = new GregorianCalendar();
         history.setGivenDate(c.getTime());
         bookFacade.edit(book);
-        historyFacade.create(history);
+        historyFacade.edit(history);
         System.out.println("========================");
     }
 
@@ -243,7 +249,7 @@ public class App {
                         .append(". ");
             }
             if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s %s %d. В наличии экземпряров: %d%n"
+                System.out.printf("%d. %s. %s %d. В наличии экземпряров: %d%n"
                         ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
@@ -252,7 +258,7 @@ public class App {
                 );
                 setNumbersBooks.add(books.get(i).getId().intValue());
             }else if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s %s %d. Нет в наличии. Будет возвращена: %s%n"
+                System.out.printf("%d. %s. %s %d. Нет в наличии. Будет возвращена: %s%n"
                         ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
@@ -277,7 +283,7 @@ public class App {
                         .append(". ");
             }
             if(books.get(i) != null && books.get(i).getCount() >= 0){
-                System.out.printf("%d. %s %s %d. В наличии экземпряров: %d%n"
+                System.out.printf("%d. %s. %s %d. В наличии экземпряров: %d%n"
                         ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
@@ -286,7 +292,7 @@ public class App {
                 );
                 setNumbersBooks.add(books.get(i).getId().intValue());
             }else if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s %s %d. Нет в наличии. Будет возвращена: %s%n"
+                System.out.printf("%d. %s. %s %d. Нет в наличии. Будет возвращена: %s%n"
                         ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,cbAutors.toString()
@@ -397,20 +403,16 @@ public class App {
         }
         System.out.println("Выберите номер автора: ");
         Author author = authorFacade.find((long)insertNumber(setNumbersAuthors));
+//        List<Book> listBooksByAuthor = bookFacade.findBooksByAuthor(author);
         for (int i = 0; i < books.size(); i++) {
             List<Author>authorsBook = books.get(i).getAuthor();
-            for (int j = 0; j < authorsBook.size(); j++) {
-                Author authorBook = authorsBook.get(j);
-                if(author.equals(authorBook)){
-                    System.out.printf("%d. %s %d%n"
+              if(authorsBook.contains(author)){
+                  System.out.printf("%d. %s. %d%n"
                             ,i+1
                             ,books.get(i).getBookName()
                             ,books.get(i).getPublishedYear()
                     );
-                }
-                
-            }
-            
+              }
         }
         System.out.println("----------------------------");
     }
