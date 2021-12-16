@@ -7,9 +7,9 @@ package gui.components;
 
 import entity.Author;
 import facade.AuthorFacade;
+import gui.components.renderers.ListAuthorCellRenderer;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.ScrollPane;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,7 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
@@ -49,6 +48,7 @@ public class ListAuthorsComponent extends JPanel{
        this.add(Box.createRigidArea(new Dimension(5,0)));
        list = new JList<>();
        list.setModel(getListModel());
+       list.setCellRenderer(new ListAuthorCellRenderer());
        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
        list.setLayoutOrientation(JList.HEIGHT);
        JScrollPane scrollPane = new JScrollPane(list);

@@ -5,6 +5,7 @@
  */
 package facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -34,7 +35,11 @@ public abstract class AbstractFacade<T> {
         return getEntityManager().find(entityClass, id);
     }
     public List<T> findAll(){
-        return getEntityManager().createQuery("SELECT entity FROM "+entityClass.getName()+" entity").getResultList();
+        try {
+            return getEntityManager().createQuery("SELECT entity FROM "+entityClass.getName()+" entity").getResultList();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
     public void edit(T entity){
         getEntityManager().getTransaction().begin();
