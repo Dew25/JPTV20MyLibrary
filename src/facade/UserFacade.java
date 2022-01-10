@@ -31,5 +31,9 @@ public class UserFacade extends AbstractFacade<User>{
     protected EntityManager getEntityManager() {
         return em;
     }
+
+    public User find(String login) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

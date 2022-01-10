@@ -40,7 +40,10 @@ import javax.swing.JTabbedPane;
 public class GuiApp extends JFrame{
     public static final int WIDTH_WINDOW = 700;
     public static final int HEIGHT_WINDOW = 450;
+    public static User user;
+    public static Role role;
     public GuiApp guiApp = this;
+    
     private CaptionComponent captionComponent;
     private InfoComponent infoComponent;
     private EditComponent nameBookComponent;
