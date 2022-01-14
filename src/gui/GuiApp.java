@@ -16,19 +16,24 @@ import facade.ReaderFacade;
 import facade.RoleFacade;
 import facade.UserFacade;
 import facade.UserRolesFacade;
+import gui.components.AddBookComponent;
 import gui.components.ButtonComponent;
 import gui.components.CaptionComponent;
 import gui.components.EditComponent;
+import gui.components.GuestComponent;
 import gui.components.InfoComponent;
 import gui.components.ListAuthorsComponent;
 import gui.components.ListBooksComponent;
+import gui.components.reader.ReaderComponent;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -41,11 +46,12 @@ public class GuiApp extends JFrame{
     public static final int WIDTH_WINDOW = 700;
     public static final int HEIGHT_WINDOW = 450;
     public static User user;
-    public static Role role;
+    public static String role;
     public GuiApp guiApp = this;
     
     private CaptionComponent captionComponent;
-    private InfoComponent infoComponent;
+    private InfoComponent infoTopComponent;
+    private ReaderComponent readerComponent;
     private EditComponent nameBookComponent;
     private EditComponent publishedYearComponent;
     private EditComponent quantityComponent;
@@ -53,6 +59,7 @@ public class GuiApp extends JFrame{
     private ButtonComponent buttonChangePanelComponent;
     private ListAuthorsComponent listAuthorsComponent;
     private ListBooksComponent listBooksComponent;
+    private JPanel guestPanel;
     private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
     private UserFacade userFacade = new UserFacade();
     private RoleFacade roleFacade = new RoleFacade();
@@ -67,98 +74,91 @@ public class GuiApp extends JFrame{
     }
     
     private void initComponents() {
-        this.setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOW,GuiApp.HEIGHT_WINDOW));
+        this.setPreferredSize(new Dimension(WIDTH_WINDOW,HEIGHT_WINDOW));
         this.setMinimumSize(this.getPreferredSize());
         this.setMaximumSize(this.getPreferredSize());
-        JPanel guestPanel = new JPanel();
-        listBooksComponent = new ListBooksComponent(false, "Список книг библиотеки", GuiApp.HEIGHT_WINDOW, GuiApp.HEIGHT_WINDOW - 100, GuiApp.WIDTH_WINDOW);
-        guestPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        guestPanel.add(listBooksComponent);
-        
-        buttonChangePanelComponent = new ButtonComponent("К выбору книг", 50, 470, 200);
+        guestPanel = new GuestComponent(WIDTH_WINDOW,HEIGHT_WINDOW);
+        buttonChangePanelComponent = new ButtonComponent("Войти", 50, 470, 200);
         guestPanel.add(buttonChangePanelComponent);
+        this.add(guestPanel);
         buttonChangePanelComponent.getButton().addActionListener(new ActionListener() {
-
+           //Аутентификация
             @Override
             public void actionPerformed(ActionEvent e) {
-                guiApp.getContentPane().removeAll();
-                JTabbedPane managerTabbed = new JTabbedPane();
-                managerTabbed.setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOW,GuiApp.HEIGHT_WINDOW));
-                managerTabbed.setMinimumSize(managerTabbed.getPreferredSize());
-                managerTabbed.setMaximumSize(managerTabbed.getPreferredSize());
-                guiApp.add(managerTabbed);
-                JPanel addBookPanel = new JPanel();
-                managerTabbed.addTab("Добавить книгу", addBookPanel);
-                addBookPanel.setLayout(new BoxLayout(addBookPanel, BoxLayout.Y_AXIS));
-                addBookPanel.add(Box.createRigidArea(new Dimension(0,25)));
-                captionComponent = new CaptionComponent("Добавление книги в библиотеку", guiApp.getWidth(), 30);
-                addBookPanel.add(captionComponent);
-                infoComponent = new InfoComponent("", guiApp.getWidth(),27);
-                addBookPanel.add(infoComponent);
-                addBookPanel.add(Box.createRigidArea(new Dimension(0,10)));
-                nameBookComponent = new EditComponent("Название книги",240, 30, 300);
-                addBookPanel.add(nameBookComponent);
-                listAuthorsComponent = new ListAuthorsComponent("Авторы", 240, 120, 300);
-                addBookPanel.add(listAuthorsComponent);
-                publishedYearComponent = new EditComponent("Год изания книги", 240, 30, 100);
-                addBookPanel.add(publishedYearComponent);
-                quantityComponent = new EditComponent("Колличество экземпляров", 240, 30, 50);
-                addBookPanel.add(quantityComponent);
-                buttonComponent = new ButtonComponent("Добавть книгу", 30, 350, 150);
-                addBookPanel.add(buttonComponent);
-                buttonComponent.getButton().addActionListener(new ActionListener() {
+                int widthWin = 350;
+                int heightWin = 260;
+                JDialog dialogLogin = new JDialog(guiApp,"Введите логи и пароль",Dialog.ModalityType.DOCUMENT_MODAL);
+                dialogLogin.setPreferredSize(new Dimension(widthWin,heightWin));
+                dialogLogin.setMaximumSize(dialogLogin.getPreferredSize());
+                dialogLogin.setMinimumSize(dialogLogin.getPreferredSize());
+                dialogLogin.getContentPane().setLayout(new BoxLayout(dialogLogin.getContentPane(), BoxLayout.Y_AXIS));
+                dialogLogin.setLocationRelativeTo(null);
+                CaptionComponent captionComponent = new CaptionComponent("Введите логин и пароль", widthWin, 27);
+                InfoComponent infoComponent = new InfoComponent("", widthWin, 27);
+                EditComponent loginComponent = new EditComponent("Логин",80, 27, 200);
+                EditComponent passwordComponent = new EditComponent("Пароль", 80, 27, 200);
+                ButtonComponent enterComponent = new ButtonComponent("Войти", 27,180, 100);
+                dialogLogin.getContentPane().add(Box.createRigidArea(new Dimension(0,10)));
+                dialogLogin.getContentPane().add(captionComponent);
+                dialogLogin.getContentPane().add(Box.createRigidArea(new Dimension(0,5)));
+                dialogLogin.getContentPane().add(infoComponent);
+                dialogLogin.getContentPane().add(Box.createRigidArea(new Dimension(0,5)));
+                dialogLogin.getContentPane().add(loginComponent);
+                dialogLogin.getContentPane().add(Box.createRigidArea(new Dimension(0,5)));
+                dialogLogin.getContentPane().add(passwordComponent);
+                dialogLogin.getContentPane().add(Box.createRigidArea(new Dimension(0,15)));
+                dialogLogin.getContentPane().add(enterComponent);
+                enterComponent.getButton().addActionListener( new ActionListener() {
+
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Book book = new Book();
-                        if(nameBookComponent.getEditor().getText().isEmpty()){
-                            infoComponent.getInfo().setForeground(Color.red);
-                            infoComponent.getInfo().setText("Введите название книги");
+                        //Аутентификация - узнать есть ли такой пользователь
+                        User user = userFacade.find(loginComponent.getEditor().getText().trim());
+                        if(user == null){
+                            infoComponent.getInfo().setText("Нет такого пользователя");
                             return;
                         }
-                        book.setBookName(nameBookComponent.getEditor().getText());
-
-                        List<Author> authorsBook = listAuthorsComponent.getList().getSelectedValuesList();
-                        if(authorsBook.isEmpty()){
-                            infoComponent.getInfo().setForeground(Color.red);
-                            infoComponent.getInfo().setText("Выберите авторов книги");
+                        //Авторизация - он ли это пользователь и какие у него права.
+                        if(!user.getPassword().equals(passwordComponent.getEditor().getText().trim())){
+                            infoComponent.getInfo().setText("Нет такого пользователя, или неверный пароль");
                             return;
+                        } 
+                        GuiApp.user = user;
+                        //Пользователь тот за кого себя выдает, устанавливаем разрешения.
+                        String role = userRolesFacade.getTopRole(user);
+                        GuiApp.role = role;
+                        infoTopComponent.getInfo().setText("Hello "+user.getReader().getFirstname());
+                        guiApp.getContentPane().remove(guestPanel);
+                        guiApp.getContentPane().remove(buttonChangePanelComponent);
+                        JTabbedPane jTabbedPane = new JTabbedPane();
+                        jTabbedPane.setPreferredSize(new Dimension(WIDTH_WINDOW,HEIGHT_WINDOW));
+                        jTabbedPane.setMinimumSize(jTabbedPane.getPreferredSize());
+                        jTabbedPane.setMaximumSize(jTabbedPane.getPreferredSize());
+                        if("READER".equals(GuiApp.role)){
+                            readerComponent = new ReaderComponent(WIDTH_WINDOW,HEIGHT_WINDOW);
+                            jTabbedPane.addTab("Читатель", readerComponent);
                         }
-                        book.setAuthor(authorsBook);
-                        try {
-                            book.setPublishedYear(Integer.parseInt(publishedYearComponent.getEditor().getText()));
-                        } catch (Exception ex) {
-                            infoComponent.getInfo().setForeground(Color.red);
-                            infoComponent.getInfo().setText("Введите год издания книги цифрами");
-                            return;
-                        }
-                        try {
-                            book.setQuantity(Integer.parseInt(quantityComponent.getEditor().getText()));
-                            book.setCount(book.getQuantity());
-                        } catch (Exception ex) {
-                            infoComponent.getInfo().setForeground(Color.red);
-                            infoComponent.getInfo().setText("Введите количество книг цифрами");
-                            return;
-                        }
-                        BookFacade bookFacade = new BookFacade(Book.class);
-                        try {
-                            bookFacade.create(book);
-                            infoComponent.getInfo().setForeground(Color.BLUE);
-                            infoComponent.getInfo().setText("Книга успешно добавлена");
-                            nameBookComponent.getEditor().setText("");
-                            publishedYearComponent.getEditor().setText("");
-                            quantityComponent.getEditor().setText("");
-                            listAuthorsComponent.getList().clearSelection();
-                        } catch (Exception ex) {
-                            infoComponent.getInfo().setForeground(Color.RED);
-                            infoComponent.getInfo().setText("Книгу добавить не удалось");
-                        }
-
+                        guiApp.getContentPane().add(jTabbedPane);
+                        guiApp.repaint();
+                        guiApp.revalidate();
+                        dialogLogin.setVisible(false);
+                        dialogLogin.dispose();
                     }
+                    
                 });
+                dialogLogin.pack();
+                dialogLogin.setVisible(true);
+//                guiApp.getContentPane().removeAll();
+//                JTabbedPane managerTabbed = new JTabbedPane();
+//                managerTabbed.setPreferredSize(new Dimension(WIDTH_WINDOW,HEIGHT_WINDOW));
+//                managerTabbed.setMinimumSize(managerTabbed.getPreferredSize());
+//                managerTabbed.setMaximumSize(managerTabbed.getPreferredSize());
+//                guiApp.add(managerTabbed);
+//                JPanel addBookPanel = new AddBookComponent(WIDTH_WINDOW,HEIGHT_WINDOW);
+//                managerTabbed.addTab("Добавить книгу", addBookPanel);
             }
         });
         
-        this.add(guestPanel);
     }
     
     public static void main(String[] args) {
