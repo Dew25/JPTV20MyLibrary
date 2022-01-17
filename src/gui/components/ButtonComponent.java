@@ -21,9 +21,7 @@ import javax.swing.JPanel;
 public class ButtonComponent extends JPanel{
     private JLabel title;
     private JButton button;
-    public ButtonComponent(String text, int heightPanel, int left, int widthEditor) {
-        initComponents(text,GuiApp.WIDTH_WINDOW, heightPanel,left,widthEditor);
-    }
+   
     public ButtonComponent(String text, int whidthPanel, int heightPanel, int left, int widthEditor) {
         initComponents(text,whidthPanel, heightPanel,left,widthEditor);
     }
@@ -33,14 +31,7 @@ public class ButtonComponent extends JPanel{
        this.setMinimumSize(this.getPreferredSize());
        this.setMaximumSize(this.getPreferredSize());
        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-       title = new JLabel();
-       title.setPreferredSize(new Dimension(left,27));
-       title.setMinimumSize(title.getPreferredSize());
-       title.setMaximumSize(title.getPreferredSize());
-       title.setHorizontalAlignment(JLabel.RIGHT);
-       title.setFont(new Font("Tahoma",0,12));
-       this.add(title);
-       this.add(Box.createRigidArea(new Dimension(5,0)));
+       this.add(Box.createRigidArea(new Dimension(left,0)));
        button = new JButton(text);
        button.setPreferredSize(new Dimension(widthEditor,27));
        button.setMinimumSize(button.getPreferredSize());

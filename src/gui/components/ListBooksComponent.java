@@ -33,6 +33,7 @@ import javax.swing.ListSelectionModel;
 public class ListBooksComponent extends JPanel{
     private JLabel title;
     private JList<Book> list;
+    private JScrollPane scrollPane; 
     /**
      * Список книг библиотеки с заголовком
      * @param xORy расположение компонентов на панели: true - горизонтальное, false - вертикальное
@@ -85,7 +86,7 @@ public class ListBooksComponent extends JPanel{
        list.setCellRenderer(new ListBooksCellRenderer());
        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
        list.setLayoutOrientation(JList.HEIGHT);
-       JScrollPane scrollPane = new JScrollPane(list);
+       scrollPane = new JScrollPane(list);
        scrollPane.setPreferredSize(new Dimension(widthEditor,heightPanel));
        scrollPane.setMinimumSize(scrollPane.getPreferredSize());
        scrollPane.setMaximumSize(scrollPane.getPreferredSize());
@@ -108,5 +109,10 @@ public class ListBooksComponent extends JPanel{
     public JList<Book> getList() {
         return list;
     }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+    
     
 }

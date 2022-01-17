@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui.components;
+package gui.components.manager;
 
+import gui.components.reader.*;
+import gui.components.*;
 import entity.Author;
 import entity.Book;
 import facade.BookFacade;
@@ -22,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author Melnikov
  */
-public class AddBookComponent extends JPanel{
+public class EditBookComponent extends JPanel{
     private CaptionComponent captionComponent;
     private InfoComponent infoComponent;
     private EditComponent nameBookComponent;
@@ -30,16 +32,16 @@ public class AddBookComponent extends JPanel{
     private EditComponent publishedYearComponent;
     private EditComponent quantityComponent;
     private ButtonComponent buttonComponent;
-    public AddBookComponent(int widthWindow, int heightPanel) {
-        initComponents(widthWindow, heightPanel);
+    public EditBookComponent() {
+        initComponents();
     }
 
-    private void initComponents(int widthWindow, int heightPanel) {
+    private void initComponents() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(0,25)));
-        captionComponent = new CaptionComponent("Добавление книги в библиотеку", widthWindow, 30);
+        captionComponent = new CaptionComponent("Добавление книги в библиотеку", GuiApp.WIDTH_WINDOW, 30);
         this.add(captionComponent);
-        infoComponent = new InfoComponent("", widthWindow,27);
+        infoComponent = new InfoComponent("", GuiApp.WIDTH_WINDOW,27);
         this.add(infoComponent);
         this.add(Box.createRigidArea(new Dimension(0,10)));
         nameBookComponent = new EditComponent("Название книги",240, 30, 300);

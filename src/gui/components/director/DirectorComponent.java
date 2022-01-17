@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui.components.reader;
+package gui.components.director;
 
+import gui.components.reader.*;
 import gui.components.*;
 import entity.Author;
 import entity.Book;
@@ -26,7 +27,7 @@ import javax.swing.JTabbedPane;
  *
  * @author Melnikov
  */
-public class ReaderComponent extends JPanel{
+public class DirectorComponent extends JPanel{
     private CaptionComponent captionComponent;
     private InfoComponent infoComponent;
     private EditComponent nameBookComponent;
@@ -34,7 +35,7 @@ public class ReaderComponent extends JPanel{
     private EditComponent publishedYearComponent;
     private EditComponent quantityComponent;
     private ButtonComponent buttonComponent;
-    public ReaderComponent() {
+    public DirectorComponent() {
         initComponents();
     }
 
@@ -44,8 +45,9 @@ public class ReaderComponent extends JPanel{
         readerTabbed.setMinimumSize(readerTabbed.getPreferredSize());
         readerTabbed.setMaximumSize(readerTabbed.getPreferredSize());
         this.add(readerTabbed);
-        readerTabbed.addTab("Взять книгу", new TakeOnBookComponent());
-        readerTabbed.addTab("Вернуть книгу", new ReturnBookComponent());
+        readerTabbed.addTab("Добавить читателя", new AddReaderComponent());
+        readerTabbed.addTab("Редактировать читателя", new EditReaderComponent());
+        readerTabbed.addTab("Изменить роль", new AddReaderComponent());
     }
 
     public InfoComponent getInfoComponent() {

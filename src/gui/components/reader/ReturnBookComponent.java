@@ -9,6 +9,7 @@ import gui.components.*;
 import entity.Author;
 import entity.Book;
 import facade.BookFacade;
+import gui.GuiApp;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -30,16 +31,16 @@ public class ReturnBookComponent extends JPanel{
     private EditComponent publishedYearComponent;
     private EditComponent quantityComponent;
     private ButtonComponent buttonComponent;
-    public ReturnBookComponent(int widthWindow, int heightPanel) {
-        initComponents(widthWindow, heightPanel);
+    public ReturnBookComponent() {
+        initComponents();
     }
 
-    private void initComponents(int widthWindow, int heightPanel) {
+    private void initComponents() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(0,25)));
-        captionComponent = new CaptionComponent("Добавление книги в библиотеку", widthWindow, 30);
+        captionComponent = new CaptionComponent("Добавление книги в библиотеку", GuiApp.WIDTH_WINDOW, 30);
         this.add(captionComponent);
-        infoComponent = new InfoComponent("", widthWindow,27);
+        infoComponent = new InfoComponent("", GuiApp.WIDTH_WINDOW,27);
         this.add(infoComponent);
         this.add(Box.createRigidArea(new Dimension(0,10)));
         nameBookComponent = new EditComponent("Название книги",240, 30, 300);
@@ -50,7 +51,7 @@ public class ReturnBookComponent extends JPanel{
         this.add(publishedYearComponent);
         quantityComponent = new EditComponent("Колличество экземпляров", 240, 30, 50);
         this.add(quantityComponent);
-        buttonComponent = new ButtonComponent("Добавть книгу", 30, 350, 150);
+        buttonComponent = new ButtonComponent("Добавть книгу",GuiApp.WIDTH_WINDOW, 30, 350, 150);
         this.add(buttonComponent);
         buttonComponent.getButton().addActionListener(new ActionListener() {
             @Override
