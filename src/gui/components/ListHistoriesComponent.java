@@ -5,13 +5,12 @@
  */
 package gui.components;
 
-import entity.Author;
-import entity.Book;
-import facade.AuthorFacade;
-import facade.BookFacade;
+import entity.History;
+import entity.Reader;
+import facade.HistoryFacade;
 import gui.GuiApp;
-import gui.components.renderers.ListAuthorsCellRenderer;
-import gui.components.renderers.ListBooksCellRenderer;
+import gui.components.renderers.ListHistoriesCellRenderer;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
@@ -30,9 +29,9 @@ import javax.swing.ListSelectionModel;
  *
  * @author Melnikov
  */
-public class ListBooksComponent extends JPanel{
+public class ListHistoriesComponent extends JPanel{
     private JLabel title;
-    private JList<Book> list;
+    private JList<History> list;
     private JScrollPane scrollPane; 
     /**
      * Список книг библиотеки с заголовком
@@ -42,11 +41,11 @@ public class ListBooksComponent extends JPanel{
      * @param heightPanel высота панели компонента
      * @param widthEditor ширина JList
      */
-    public ListBooksComponent(boolean xORy,String text, int left, int heightPanel, int widthEditor) {
+    public ListHistoriesComponent(boolean xORy,String text, int left, int heightPanel, int widthEditor) {
         initComponents(xORy, text, left, heightPanel,widthEditor);
     }
 
-    public ListBooksComponent(String text, int left, int heightPanel, int widthEditor) {
+    public ListHistoriesComponent(String text, int left, int heightPanel, int widthEditor) {
         this.initComponents(false, text, left, heightPanel, widthEditor);
     }
     
@@ -55,9 +54,11 @@ public class ListBooksComponent extends JPanel{
        this.setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOW-50,heightPanel));
        this.setMinimumSize(this.getPreferredSize());
        this.setMaximumSize(this.getPreferredSize());
+       this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
        title = new JLabel(text);
        title.setMinimumSize(title.getPreferredSize());
        title.setMaximumSize(title.getPreferredSize());
+       title.setBorder(BorderFactory.createLineBorder(Color.BLUE));
        list = new JList<>();
        
        if(xORy){
@@ -68,8 +69,8 @@ public class ListBooksComponent extends JPanel{
        }else{
            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
            this.add(Box.createRigidArea(new Dimension(0,10)));
-           title.setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOW-50,27));
-           title.setHorizontalAlignment(JLabel.CENTER);
+           title.setPreferredSize(new Dimension(GuiApp.WIDTH_WINDOW,27));
+           title.setHorizontalAlignment(JLabel.LEFT);
            title.setAlignmentY(TOP_ALIGNMENT);
            
            
@@ -82,8 +83,8 @@ public class ListBooksComponent extends JPanel{
            this.add(Box.createRigidArea(new Dimension(0,10)));
            
        }
-       list.setModel(getListModel());
-       list.setCellRenderer(new ListBooksCellRenderer());
+       list.setModel(getListHistoriesModel(GuiApp.user.getReader()));
+       list.setCellRenderer(new ListHistoriesCellRenderer());
        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
        list.setLayoutOrientation(JList.HEIGHT);
        scrollPane = new JScrollPane(list);
@@ -91,22 +92,27 @@ public class ListBooksComponent extends JPanel{
        scrollPane.setMinimumSize(scrollPane.getPreferredSize());
        scrollPane.setMaximumSize(scrollPane.getPreferredSize());
        scrollPane.setAlignmentX(LEFT_ALIGNMENT);
-       scrollPane.setAlignmentY(TOP_ALIGNMENT);
+       if(xORy){
+           scrollPane.setAlignmentY(TOP_ALIGNMENT);
+       }else{
+           scrollPane.setAlignmentY(LEFT_ALIGNMENT);
+       }
        this.add(scrollPane);
     }
 
-    private ListModel<Book> getListModel() {
-        BookFacade bookFacade = new BookFacade(Book.class);
-        List<Book> books = bookFacade.findAll();
-        
-        DefaultListModel<Book> defaultListModel = new DefaultListModel<>();
-        for (Book book : books) {
-            defaultListModel.addElement(book);
+    private ListModel<History> getListHistoriesModel(Reader reader) {
+        HistoryFacade historyFacade = new HistoryFacade(History.class);
+        List<History> histories = historyFacade.find(reader);
+        DefaultListModel<History> defaultListModel = new DefaultListModel<>();
+        if(histories != null){
+            for (History history : histories) {
+                defaultListModel.addElement(history);
+            }
         }
         return defaultListModel;
     }
 
-    public JList<Book> getList() {
+    public JList<History> getList() {
         return list;
     }
 

@@ -17,7 +17,7 @@ import javax.swing.UIManager;
  *
  * @author Melnikov
  */
-public class ListAuthorCellRenderer extends DefaultListCellRenderer{
+public class ListAuthorsCellRenderer extends DefaultListCellRenderer{
     private final Color background = new Color(0, 100, 255, 15);
     private final Color defaultBackground = (Color) UIManager.get("List.background");
     @Override
@@ -28,6 +28,7 @@ public class ListAuthorCellRenderer extends DefaultListCellRenderer{
             if(component instanceof JLabel){
                 JLabel label = (JLabel) component;
                 Author author = (Author) value;
+                if(author == null) return component;
                 label.setText(String.format("%s %s. %d"
                         ,author.getFirstname()
                         ,author.getLastname()

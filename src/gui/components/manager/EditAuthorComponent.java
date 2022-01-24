@@ -7,16 +7,17 @@ package gui.components.manager;
 
 import gui.components.*;
 import entity.Author;
-import entity.Book;
-import facade.BookFacade;
+import facade.AuthorFacade;
 import gui.GuiApp;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 /**
@@ -26,11 +27,12 @@ import javax.swing.JPanel;
 public class EditAuthorComponent extends JPanel{
     private CaptionComponent captionComponent;
     private InfoComponent infoComponent;
-    private EditComponent nameBookComponent;
-    private ListAuthorsComponent listAuthorsComponent;
-    private EditComponent publishedYearComponent;
-    private EditComponent quantityComponent;
+    private ComboBoxAuthorsComponent comboBoxAuthorsComponent;
+    private EditComponent nameAuthorComponent;
+    private EditComponent lastNameAuthorComponent;
+    private EditComponent birthYearAuthorComponent;
     private ButtonComponent buttonComponent;
+    private Author editAuthor;
     public EditAuthorComponent() {
         initComponents();
     }
@@ -38,70 +40,81 @@ public class EditAuthorComponent extends JPanel{
     private void initComponents() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(0,25)));
-        captionComponent = new CaptionComponent("Добавление книги в библиотеку", GuiApp.WIDTH_WINDOW, 30);
+        captionComponent = new CaptionComponent("Редактирование автора", GuiApp.WIDTH_WINDOW, 30);
         this.add(captionComponent);
         infoComponent = new InfoComponent("", GuiApp.WIDTH_WINDOW,27);
         this.add(infoComponent);
         this.add(Box.createRigidArea(new Dimension(0,10)));
-        nameBookComponent = new EditComponent("Название книги",240, 30, 300);
-        this.add(nameBookComponent);
-        listAuthorsComponent = new ListAuthorsComponent("Авторы", 240, 120, 300);
-        this.add(listAuthorsComponent);
-        publishedYearComponent = new EditComponent("Год изания книги", 240, 30, 100);
-        this.add(publishedYearComponent);
-        quantityComponent = new EditComponent("Колличество экземпляров", 240, 30, 50);
-        this.add(quantityComponent);
-        buttonComponent = new ButtonComponent("Добавть книгу",GuiApp.WIDTH_WINDOW, 30, 350, 150);
+        comboBoxAuthorsComponent = new ComboBoxAuthorsComponent("Авторы", 240, 30, 300);
+        this.add(comboBoxAuthorsComponent);
+        this.add(Box.createRigidArea(new Dimension(0,10)));
+        nameAuthorComponent = new EditComponent("Имя",240, 30, 300);
+        this.add(nameAuthorComponent);
+        lastNameAuthorComponent = new EditComponent("Фамилия",240, 30, 300);
+        this.add(lastNameAuthorComponent);
+        birthYearAuthorComponent = new EditComponent("Год рождения книги", 240, 30, 100);
+        this.add(birthYearAuthorComponent);
+       
+        buttonComponent = new ButtonComponent("Добавть автора",GuiApp.WIDTH_WINDOW, 30, 350, 150);
         this.add(buttonComponent);
         buttonComponent.getButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Book book = new Book();
-                if(nameBookComponent.getEditor().getText().isEmpty()){
+                Author author = new Author();
+                if(nameAuthorComponent.getEditor().getText().isEmpty()){
                     infoComponent.getInfo().setForeground(Color.red);
-                    infoComponent.getInfo().setText("Введите название книги");
+                    infoComponent.getInfo().setText("Введите имя автора");
                     return;
                 }
-                book.setBookName(nameBookComponent.getEditor().getText());
-
-                List<Author> authorsBook = listAuthorsComponent.getList().getSelectedValuesList();
-                if(authorsBook.isEmpty()){
-                    infoComponent.getInfo().setForeground(Color.red);
-                    infoComponent.getInfo().setText("Выберите авторов книги");
-                    return;
-                }
-                book.setAuthor(authorsBook);
+                author.setFirstname(nameAuthorComponent.getEditor().getText());
+                
                 try {
-                    book.setPublishedYear(Integer.parseInt(publishedYearComponent.getEditor().getText()));
+                    author.setLastname(lastNameAuthorComponent.getEditor().getText());
                 } catch (Exception ex) {
                     infoComponent.getInfo().setForeground(Color.red);
-                    infoComponent.getInfo().setText("Введите год издания книги цифрами");
+                    infoComponent.getInfo().setText("Введите фамилию автора");
                     return;
                 }
                 try {
-                    book.setQuantity(Integer.parseInt(quantityComponent.getEditor().getText()));
-                    book.setCount(book.getQuantity());
+                    author.setBirthYear(Integer.parseInt(birthYearAuthorComponent.getEditor().getText()));
                 } catch (Exception ex) {
                     infoComponent.getInfo().setForeground(Color.red);
-                    infoComponent.getInfo().setText("Введите количество книг цифрами");
+                    infoComponent.getInfo().setText("Введите год цифрами");
                     return;
                 }
-                BookFacade bookFacade = new BookFacade(Book.class);
+                AuthorFacade authorFacade = new AuthorFacade(Author.class);
                 try {
-                    bookFacade.create(book);
+                    authorFacade.create(author);
                     infoComponent.getInfo().setForeground(Color.BLUE);
-                    infoComponent.getInfo().setText("Книга успешно добавлена");
-                    nameBookComponent.getEditor().setText("");
-                    publishedYearComponent.getEditor().setText("");
-                    quantityComponent.getEditor().setText("");
-                    listAuthorsComponent.getList().clearSelection();
+                    infoComponent.getInfo().setText("Автор успешно добавлен");
+                    comboBoxAuthorsComponent.getComboBox().setModel(comboBoxAuthorsComponent.getComboBoxModel());
+                    comboBoxAuthorsComponent.getComboBox().setSelectedIndex(-1);
                 } catch (Exception ex) {
                     infoComponent.getInfo().setForeground(Color.RED);
-                    infoComponent.getInfo().setText("Книгу добавить не удалось");
+                    infoComponent.getInfo().setText("Автора добавить не удалось");
                 }
 
             }
     });
+    comboBoxAuthorsComponent.getComboBox().addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                JComboBox comboBox = (JComboBox) e.getSource();
+               if(comboBox.getSelectedIndex() == -1){
+                    nameAuthorComponent.getEditor().setText("");
+                    lastNameAuthorComponent.getEditor().setText("");
+                    birthYearAuthorComponent.getEditor().setText("");
+               }else{
+                    editAuthor = (Author) e.getItem();
+                    nameAuthorComponent.getEditor().setText(editAuthor.getFirstname());
+                    lastNameAuthorComponent.getEditor().setText(editAuthor.getLastname());
+                    birthYearAuthorComponent.getEditor().setText(((Integer)editAuthor.getBirthYear()).toString());
+                    
+               }
+                
+            }
+        });
 }
        
     
